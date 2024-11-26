@@ -19,13 +19,17 @@
 
       <p>Somos Nucleo IA, una plataforma de confianza para la trazabilidad en la industria cafetera</p>
     </div>
+    <button class="btn btn-primary w-100 mb-2" id="stats" onclick="goToStats()">Ir a estadísticas</button>
+    <button class="btn btn-primary w-100 mb-2" id="scannerQR">Escanea un QR</button>
 
-    <div id="qr-reader"></div>
+    <div>
 
-    <!-- Mostrar el resultado del escaneo -->
-    <div id="result"></div>
+      <div id="qr-reader"></div>
 
-    <button class="btn btn-primary w-100" id="scannerQR">Escanea un QR</button>
+      <!-- Mostrar el resultado del escaneo -->
+      <div id="result"></div>
+    </div>
+
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
@@ -62,6 +66,10 @@
           // Iniciar el escáner de QR al hacer clic en el botón
           qrCodeScanner.render(onScanSuccess, onScanError);
         });
+
+        function goToStats() {
+            window.location.href = "stats.html";
+          }
   </script>
 </body>
 </html>

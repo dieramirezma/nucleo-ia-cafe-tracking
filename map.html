@@ -21,15 +21,27 @@
             height: 600px;
             width: 100%;
         }
+        .small-screen-container {
+            max-width: 360px;
+            height: calc(100vh - 40px);
+            margin: 20px auto;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+            overflow-y: auto;
+        }
     </style>
 </head>
 <body>
+    <div class="container small-screen-container py-4 text-center d-flex flex-column justify-content-between align-center">
+
+
     <div class="d-flex justify-content-end mb-2">
         <button class="btn btn-secondary btn-sm btn-home" onclick="goHome()">Regresar</button>
     </div>
     <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
-        <div class="container">
-            <a class="navbar-brand" href="#">Mapa Interactivo: Cadena de Valor del Café en Colombia - No. 202405088952</a>
+        <div class="d-flex flex-column">
+            <h1 class="navbar-brand">Mapa Interactivo</h1>
+            <p><strong>de Valor del Café en Colombia - No. 202405088952</strong></p>
             <div id="live-date-time" class="navbar-text"></div>
 
             <div class="btn-group ms-auto" role="group">
@@ -43,7 +55,7 @@
 
     <div class="container">
 
-        <div class="d-flex justify-content-start mb-3">
+        <div class="d-flex justify-content-start mb-3" style="overflow-x: auto;">
             <button class="btn btn-outline-primary filter-btn" data-filter="all">Todos</button>
             <button class="btn btn-outline-secondary filter-btn" data-filter="Productores">Productores</button>
             <button class="btn btn-outline-secondary filter-btn" data-filter="Procesadores Primarios">Procesadores Primarios</button>
@@ -58,6 +70,7 @@
         </div>
         <div id="map"></div>
         <canvas id="charts-container"></canvas>
+    </div>
     </div>
 
 

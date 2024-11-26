@@ -41,5 +41,5 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function goHome() {
-  window.location.href = "/";
+  window.location.href = "index.html";
 }

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="./css/styles.css">
+  <script src="./js/script.js"></script>
+  <title>Núcleo IA</title>
+</head>
+
+<body>
+
+  <div class="container small-screen-container py-4">
+    <h1 class="text-center mb-4 fs-3">Sistema de registro de café</h1>
+
+    <!-- Seleccionar el tipo de Actor: productor, procesadores primarios, etc -->
+    <div class="form-section">
+      <label for="actorSelect">Selecciona un Actor:</label>
+      <select id="actorSelect" class="form-select form-select-sm">
+        <option value="">Seleccione un Actor</option>
+        <option value="Prod">Productor</option>
+        <option value="ProcPrim">Procesadores Primarios</option>
+        <option value="Inter">Intermediarios</option>
+        <option value="ProcSec">Procesadores Secundarios</option>
+        <option value="Exp">Exportadores</option>
+        <option value="Imp">Importadores</option>
+        <option value="Tost">Tostadores</option>
+        <option value="Dist">Distribuidores</option>
+        <option value="Min">Minoristas</option>
+        <option value="Cons">Consumidores</option>
+      </select>
+      <label for="nombre">Nombre del Responsable:</label>
+      <input type="text" id="nombre" class="form-control form-control-sm" placeholder="Ingrese su nombre">
+    </div>
+
+    <!-- Productores -->
+    <div id="formProd" class="form-section" style="display: none;">
+      <h2>Productor</h2>
+
+      <!-- Ubicación Geográfica -->
+      <label for="ubicacionProd">Ubicación geográfica:</label>
+      <input type="text" id="ubicacionProd" class="form-control form-control-sm" placeholder="Ingrese la ubicación">
+
+      <label for="departamentoProd">Departamento:</label>
+      <select id="departamentoProd" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="1">Caldas</option>
+        <option value="2">Antioquia</option>
+        <option value="3">Cundinamarca</option>
+        <!-- Otros departamentos según sea necesario -->
+      </select>
+
+      <label for="municipioProd">Municipio:</label>
+      <select id="municipioProd" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="1">Manizales</option>
+        <option value="2">Medellín</option>
+        <!-- Otros municipios según sea necesario -->
+      </select>
+
+      <label for="coordenadasProd">Coordenadas GPS:</label>
+      <div class="d-flex">
+        <input type="text" id="latitudProd" class="form-control form-control-sm" placeholder="Latitud"
+          style="width: 50%; margin-right: 10px;">
+        <input type="text" id="longitudProd" class="form-control form-control-sm" placeholder="Longitud"
+          style="width: 50%;">
+      </div>
+
+      <!-- Información del Cultivo -->
+      <label for="variedadProd">Variedad del café:</label>
+      <input type="text" id="variedadProd" class="form-control form-control-sm" placeholder="Ej. Typica, Bourbon">
+
+      <label for="areaProd">Área cultivada (en hectáreas):</label>
+      <input type="number" id="areaProd" class="form-control form-control-sm" placeholder="Área cultivada en hectáreas">
+
+      <label for="produccionEstimadaProd">Producción estimada (kg):</label>
+      <input type="number" id="produccionEstimadaProd" class="form-control form-control-sm"
+        placeholder="Producción estimada">
+
+      <!-- Certificaciones -->
+      <label for="certificacionesProd">¿El cultivo tiene certificaciones?</label>
+      <select id="certificacionesProd" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="1">Orgánico</option>
+        <option value="2">Comercio Justo</option>
+        <option value="3">Denominación de Origen</option>
+        <option value="4">Ninguna</option>
+        <!-- Otros tipos de certificaciones según sea necesario -->
+      </select>
+
+      <!-- Datos Climáticos Relevantes -->
+      <label for="lluviaProd">Promedio de lluvia anual (mm):</label>
+      <input type="number" id="lluviaProd" class="form-control form-control-sm" placeholder="Promedio anual en mm">
+
+      <label for="temperaturaProd">Temperatura promedio (°C):</label>
+      <input type="number" id="temperaturaProd" class="form-control form-control-sm"
+        placeholder="Temperatura promedio en °C">
+    </div>
+
+
+    <!-- Procesadores Primarios -->
+    <div id="formProcPrim" class="form-section" style="display: none;">
+      <h2>Procesadores Primarios</h2>
+
+      <!-- Método de Procesamiento -->
+      <label for="metodoProcPrim">Método de Procesamiento:</label>
+      <select id="metodoProcPrim" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="lavado">Lavado</option>
+        <option value="secado">Secado</option>
+        <option value="trillado">Trillado</option>
+        <option value="fermentacion">Fermentación</option>
+      </select>
+
+      <!-- Capacidad de Procesamiento -->
+      <label for="capacidadProcPrim">Cantidad procesada por día (kg):</label>
+      <input type="number" id="capacidadProcPrim" class="form-control form-control-sm"
+        placeholder="Cantidad procesada por día en kg">
+
+      <!-- Condiciones de Almacenamiento -->
+      <label for="humedadProcPrim">Humedad relativa (%):</label>
+      <input type="number" id="humedadProcPrim" class="form-control form-control-sm"
+        placeholder="Humedad relativa en porcentaje">
+
+      <label for="temperaturaProcPrim">Temperatura (°C):</label>
+      <input type="number" id="temperaturaProcPrim" class="form-control form-control-sm"
+        placeholder="Temperatura en °C">
+
+      <!-- Ubicación de la Planta -->
+      <label for="ubicacionPlantaProcPrim">Ubicación de la Planta:</label>
+      <input type="text" id="ubicacionPlantaProcPrim" class="form-control form-control-sm"
+        placeholder="Dirección de la planta">
+
+      <label for="coordenadasPlantaProcPrim">Coordenadas GPS de la Planta:</label>
+      <div class="d-flex">
+        <input type="text" id="latitudPlantaProcPrim" class="form-control form-control-sm" placeholder="Latitud"
+          style="width: 50%; margin-right: 10px;">
+        <input type="text" id="longitudPlantaProcPrim" class="form-control form-control-sm" placeholder="Longitud"
+          style="width: 50%;">
+      </div>
+    </div>
+
+
+    <!-- Intermediarios -->
+    <div id="formInterm" class="form-section" style="display: none;">
+      <h2>Intermediarios</h2>
+
+      <!-- Volumen de Compra -->
+      <label for="volumenCompraInterm">Volumen de Compra (kg):</label>
+      <input type="number" id="volumenCompraInterm" class="form-control form-control-sm"
+        placeholder="Ingrese la cantidad de café adquirido">
+
+      <!-- Precio de Compra -->
+      <label for="precioCompraInterm">Precio de Compra (por kg):</label>
+      <input type="number" id="precioCompraInterm" class="form-control form-control-sm"
+        placeholder="Ingrese el precio por kg de café">
+
+      <!-- Destino del Café -->
+      <label for="destinoCafeInterm">Destino del Café:</label>
+      <input type="text" id="destinoCafeInterm" class="form-control form-control-sm"
+        placeholder="Ingrese el lugar o cliente al que se entrega">
+
+      <!-- Frecuencia de Compras -->
+      <label for="frecuenciaComprasInterm">Frecuencia de Compras:</label>
+      <select id="frecuenciaComprasInterm" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="semanal">Semanal</option>
+        <option value="mensual">Mensual</option>
+        <option value="esporadica">Esporádica</option>
+      </select>
+    </div>
+
+    <!-- Procesadores Secundarios -->
+    <div id="formProcSec" class="form-section" style="display: none;">
+      <h2>Procesadores Secundarios</h2>
+
+      <!-- Tipo de Procesamiento -->
+      <label for="tipoProcesamientoProcSec">Tipo de Procesamiento:</label>
+      <select id="tipoProcesamientoProcSec" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="tostado">Tostado</option>
+        <option value="molienda">Molienda</option>
+        <option value="encapsulado">Encapsulado</option>
+      </select>
+
+      <!-- Perfil de Tueste -->
+      <label for="perfilTuesteProcSec">Perfil de Tueste:</label>
+      <select id="perfilTuesteProcSec" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="claro">Claro</option>
+        <option value="medio">Medio</option>
+        <option value="oscuro">Oscuro</option>
+      </select>
+
+      <!-- Capacidad de Producción -->
+      <label for="capacidadProduccionProcSec">Capacidad de Producción (kg por día):</label>
+      <input type="number" id="capacidadProduccionProcSec" class="form-control form-control-sm"
+        placeholder="Volumen producido por día en kg">
+
+      <!-- Información del Producto Final -->
+      <label for="presentacionesProcSec">Presentaciones del Producto Final:</label>
+      <input type="text" id="presentacionesProcSec" class="form-control form-control-sm"
+        placeholder="Ej. En grano, molido, cápsulas">
+
+      <label for="empaqueProcSec">Empaque (materiales y certificaciones):</label>
+      <input type="text" id="empaqueProcSec" class="form-control form-control-sm"
+        placeholder="Materiales utilizados y certificaciones de sostenibilidad">
+    </div>
+
+
+    <!-- Exportadores -->
+    <div id="formExp" class="form-section" style="display: none;">
+      <h2>Exportadores</h2>
+
+      <!-- País de Destino -->
+      <label for="paisDestinoExp">País de Destino:</label>
+      <input type="text" id="paisDestinoExp" class="form-control form-control-sm"
+        placeholder="Ingrese el país o región de destino">
+
+      <!-- Volumen Exportado -->
+      <label for="volumenExportadoExp">Volumen Exportado (toneladas):</label>
+      <input type="number" id="volumenExportadoExp" class="form-control form-control-sm"
+        placeholder="Cantidad exportada">
+
+      <!-- Certificados de Calidad -->
+      <label for="certificadosCalidadExp">Certificados de Calidad:</label>
+      <input type="text" id="certificadosCalidadExp" class="form-control form-control-sm"
+        placeholder="Certificaciones requeridas para exportación">
+
+      <!-- Método de Transporte -->
+      <label for="metodoTransporteExp">Método de Transporte:</label>
+      <select id="metodoTransporteExp" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="aereo">Aéreo</option>
+        <option value="maritimo">Marítimo</option>
+        <option value="terrestre">Terrestre</option>
+      </select>
+    </div>
+
+
+    <!-- Importadores -->
+    <div id="formImp" class="form-section" style="display: none;">
+      <h2>Importadores</h2>
+
+      <!-- Proveedor Principal -->
+      <label for="proveedorPrincipalImp">Proveedor Principal:</label>
+      <input type="text" id="proveedorPrincipalImp" class="form-control form-control-sm"
+        placeholder="Nombre del exportador o cooperativa">
+
+      <!-- Uso del Café -->
+      <label for="usoCafeImp">Uso del Café:</label>
+      <select id="usoCafeImp" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="venta_directa">Venta directa</option>
+        <option value="procesamiento_adicional">Procesamiento adicional</option>
+        <option value="distribucion_minorista">Distribución minorista</option>
+      </select>
+
+      <!-- Volumen Importado -->
+      <label for="volumenImportadoImp">Volumen Importado (toneladas):</label>
+      <input type="number" id="volumenImportadoImp" class="form-control form-control-sm"
+        placeholder="Cantidad importada">
+
+      <!-- Certificaciones Exigidas -->
+      <label for="certificacionesExigidasImp">Certificaciones Exigidas:</label>
+      <input type="text" id="certificacionesExigidasImp" class="form-control form-control-sm"
+        placeholder="Especificar requisitos legales o de calidad">
+    </div>
+
+
+    <!-- Tostadores -->
+    <div id="formTost" class="form-section" style="display: none;">
+      <h2>Tostadores</h2>
+
+      <!-- Origen del Café -->
+      <label for="origenCafeTost">Origen del Café:</label>
+      <input type="text" id="origenCafeTost" class="form-control form-control-sm"
+        placeholder="País y región de origen del café">
+
+      <!-- Capacidad de Tostado -->
+      <label for="capacidadTost">Capacidad de Tostado (kg por día):</label>
+      <input type="number" id="capacidadTost" class="form-control form-control-sm"
+        placeholder="Cantidad de café tostado por día">
+
+      <!-- Perfil de Tueste -->
+      <label for="perfilTuesteTost">Perfil de Tueste:</label>
+      <select id="perfilTuesteTost" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="claro">Claro</option>
+        <option value="medio">Medio</option>
+        <option value="oscuro">Oscuro</option>
+      </select>
+
+      <!-- Empaque y Distribución -->
+      <label for="empaqueTost">Empaque y Distribución:</label>
+      <textarea id="empaqueTost" class="form-control form-control-sm"
+        placeholder="Métodos de empaque y canales de distribución"></textarea>
+    </div>
+
+
+    <!-- Distribuidores -->
+    <div id="formDist" class="form-section" style="display: none;">
+      <h2>Distribuidores</h2>
+
+      <!-- Volumen de Distribución -->
+      <label for="volumenDistribucionDist">Volumen de Distribución (kg):</label>
+      <input type="number" id="volumenDistribucionDist" class="form-control form-control-sm"
+        placeholder="Cantidad distribuida por periodo">
+
+      <!-- Puntos de Entrega -->
+      <label for="puntosEntregaDist">Puntos de Entrega:</label>
+      <textarea id="puntosEntregaDist" class="form-control form-control-sm"
+        placeholder="Lista de puntos de venta o mayoristas"></textarea>
+
+      <!-- Frecuencia de Distribución -->
+      <label for="frecuenciaDistribucionDist">Frecuencia de Distribución:</label>
+      <select id="frecuenciaDistribucionDist" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="semanal">Semanal</option>
+        <option value="quincenal">Quincenal</option>
+        <option value="mensual">Mensual</option>
+      </select>
+
+      <!-- Costos Logísticos -->
+      <label for="costosLogisticosDist">Costos Logísticos:</label>
+      <input type="text" id="costosLogisticosDist" class="form-control form-control-sm"
+        placeholder="Detalles de transporte, almacenamiento, etc.">
+    </div>
+
+
+    <!-- Minoristas -->
+    <div id="formMin" class="form-section" style="display: none;">
+      <h2>Minoristas</h2>
+
+      <!-- Tipo de Producto Vendido -->
+      <label for="tipoProductoMin">Tipo de Producto Vendido:</label>
+      <select id="tipoProductoMin" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="grano">En grano</option>
+        <option value="molido">Molido</option>
+        <option value="capsulas">Cápsulas</option>
+        <option value="bebidas">Bebidas preparadas</option>
+      </select>
+
+      <!-- Volumen de Venta -->
+      <label for="volumenVentaMin">Volumen de Venta (cantidad por semana/mes):</label>
+      <input type="number" id="volumenVentaMin" class="form-control form-control-sm"
+        placeholder="Cantidad vendida por semana/mes">
+
+      <!-- Precio al Consumidor -->
+      <label for="precioConsumidorMin">Precio al Consumidor:</label>
+      <input type="number" id="precioConsumidorMin" class="form-control form-control-sm"
+        placeholder="Precio promedio por presentación">
+    </div>
+
+
+    <!-- Consumidores -->
+    <div id="formCons" class="form-section" style="display: none;">
+      <h2>Consumidores</h2>
+
+      <!-- Preferencias -->
+      <label for="preferenciasCons">Preferencias:</label>
+      <textarea id="preferenciasCons" class="form-control form-control-sm"
+        placeholder="Especificar preferencias sobre el origen, certificaciones, perfil de tueste, etc."></textarea>
+
+      <!-- Frecuencia de Consumo -->
+      <label for="frecuenciaConsumoCons">Frecuencia de Consumo:</label>
+      <select id="frecuenciaConsumoCons" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="diaria">Diaria</option>
+        <option value="semanal">Semanal</option>
+        <option value="esporadica">Esporádica</option>
+      </select>
+
+      <!-- Canal de Compra -->
+      <label for="canalCompraCons">Canal de Compra:</label>
+      <select id="canalCompraCons" class="form-select form-select-sm">
+        <option value="">Seleccione...</option>
+        <option value="supermercado">Supermercados</option>
+        <option value="cafeteria">Cafeterías</option>
+        <option value="en_linea">En línea</option>
+      </select>
+
+      <!-- Rango de Precios Aceptables -->
+      <label for="rangoPreciosCons">Rango de Precios Aceptables:</label>
+      <input type="number" id="rangoPreciosCons" class="form-control form-control-sm"
+        placeholder="Monto que estaría dispuesto a pagar">
+    </div>
+
+
+    <button class="btn btn-primary w-100">Registrar</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+
+</body>
+
+</html>

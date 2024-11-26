@@ -39,3 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   ocultarFormularios();
 });
+
+function goHome() {
+  window.location.href = "index.html";
+}

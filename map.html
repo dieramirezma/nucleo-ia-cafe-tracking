@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo: Cadena de Valor del Café en Colombia</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster/dist/MarkerCluster.Default.css" />
+    <style>
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        #charts-container {
+            display: none;
+            height: 600px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-end mb-2">
+        <button class="btn btn-secondary btn-sm btn-home" onclick="goHome()">Regresar</button>
+    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">Mapa Interactivo: Cadena de Valor del Café en Colombia - No. 202405088952</a>
+            <div id="live-date-time" class="navbar-text"></div>
+
+            <div class="btn-group ms-auto" role="group">
+                <button class="btn btn-primary" id="btn-show-markers">Marcadores y Rutas</button>
+                <button class="btn btn-secondary" id="btn-show-heatmap">Mapa de Calor</button>
+                <button class="btn btn-success" id="btn-show-charts">Estadísticas</button>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+
+        <div class="d-flex justify-content-start mb-3">
+            <button class="btn btn-outline-primary filter-btn" data-filter="all">Todos</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Productores">Productores</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Procesadores Primarios">Procesadores Primarios</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Intermediarios">Intermediarios</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Procesadores Secundarios">Procesadores Secundarios</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Exportadores">Exportadores</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Importadores">Importadores</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Tostadores">Tostadores</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Distribuidores">Distribuidores</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Minoristas">Minoristas</button>
+            <button class="btn btn-outline-secondary filter-btn" data-filter="Consumidores">Consumidores</button>
+        </div>
+        <div id="map"></div>
+        <canvas id="charts-container"></canvas>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster/dist/leaflet.markercluster.js"></script>
+    <!-- Leaflet Heatmap -->
+    <script src="https://cdn.jsdelivr.net/npm/leaflet.heat/dist/leaflet-heat.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+
+        const data = {
+            chains: [
+                {
+                    id: 'CADENA_CAFE_COLOMBIA',
+                    actors: [
+                        // Productores
+                        {
+                            id: 1,
+                            type: 'Productores',
+                            name: 'Finca La Esperanza',
+                            coords: [1.8536, -76.0508],
+                            department: 'Huila',
+                            municipio: 'Pitalito',
+                            production: 8000,
+                            details: {
+                                'Nombre del Responsable': 'Carlos Mejía',
+                                'Variedad del café': 'Typica',
+                                'Área cultivada': '10 hectáreas',
+                                'Certificaciones': ['Orgánico', 'Comercio Justo'],
+                                'Promedio de lluvia anual': '1800 mm',
+                                'Temperatura promedio': '20°C'
+                            }
+                        },
+                        {
+                            id: 2,
+                            type: 'Productores',
+                            name: 'Finca El Diamante',
+                            coords: [4.9822, -75.6022],
+                            department: 'Caldas',
+                            municipio: 'Chinchiná',
+                            production: 5500,
+                            details: {
+                                'Nombre del Responsable': 'María Rodríguez',
+                                'Variedad del café': 'Bourbon',
+                                'Área cultivada': '7 hectáreas',
+                                'Certificaciones': ['Denominación de Origen'],
+                                'Promedio de lluvia anual': '2200 mm',
+                                'Temperatura promedio': '19°C'
+                            }
+                        },
+                        // Procesadores Primarios
+                        {
+                            id: 3,
+                            type: 'Procesadores Primarios',
+                            name: 'Cooperativa de Caficultores del Huila',
+                            coords: [2.9386, -75.2809],
+                            capacity: 12000,
+                            details: {
+                                'Nombre del Responsable': 'Andrés López',
+                                'Método de Procesamiento': ['Lavado', 'Secado', 'Fermentación'],
+                                'Condiciones de Almacenamiento': {
+                                    'Humedad relativa': '60%',
+                                    'Temperatura': '18°C'
+                                },
+                                'Ubicación de la Planta': 'Calle 10 #5-20, Neiva, Huila'
+                            }
+                        },
+                        // Intermediarios
+                        {
+                            id: 4,
+                            type: 'Intermediarios',
+                            name: 'Comercializadora Cafetera Colombiana',
+                            coords: [4.7110, -74.0721],
+                            volume: 20000,
+                            details: {
+                                'Nombre del Responsable': 'Laura Gómez',
+                                'Precio de Compra': 'COP 9,000/kg',
+                                'Destino del Café': 'Procesadores Secundarios y Exportadores',
+                                'Frecuencia de Compras': 'Quincenal'
+                            }
+                        },
+                        // Procesadores Secundarios
+                        {
+                            id: 5,
+                            type: 'Procesadores Secundarios',
+                            name: 'Tostadora Cafés Especiales S.A.S.',
+                            coords: [6.2518, -75.5636],
+                            capacity: 6000,
+                            details: {
+                                'Nombre del Responsable': 'Javier Martínez',
+                                'Tipo de Procesamiento': ['Tostado', 'Molienda', 'Encapsulado'],
+                                'Perfil de Tueste': ['Medio', 'Oscuro'],
+                                'Información del Producto Final': {
+                                    'Presentaciones': ['En grano', 'Molido', 'Cápsulas'],
+                                    'Empaque': 'Bolsas reciclables certificadas FSC'
+                                }
+                            }
+                        },
+                        // Exportadores
+                        {
+                            id: 6,
+                            type: 'Exportadores',
+                            name: 'Exportadora Café Premium Ltda.',
+                            coords: [3.4516, -76.5320],
+                            capacity: 25000,
+                            details: {
+                                'Nombre del Responsable': 'Santiago Ramírez',
+                                'País de Destino': ['Estados Unidos', 'Japón', 'Alemania'],
+                                'Certificados de Calidad': ['Rainforest Alliance', 'Orgánico', 'Denominación de Origen'],
+                                'Método de Transporte': ['Marítimo', 'Aéreo']
+                            }
+                        },
+                        // Importadores
+                        {
+                            id: 7,
+                            type: 'Importadores',
+                            name: 'World Coffee Imports',
+                            coords: [40.7128, -74.0060], // Nueva York
+                            volume: 25000,
+                            details: {
+                                'Nombre del Responsable': 'Emily Johnson',
+                                'Proveedor Principal': 'Exportadora Café Premium Ltda.',
+                                'Uso del Café': ['Distribución minorista', 'Procesamiento adicional'],
+                                'Certificaciones Exigidas': ['USDA Orgánico', 'Fair Trade', 'ISO 22000']
+                            }
+                        },
+                        // Tostadores
+                        {
+                            id: 8,
+                            type: 'Tostadores',
+                            name: 'Global Roasters Co.',
+                            coords: [34.0522, -118.2437], // Los Ángeles
+                            capacity: 5000,
+                            details: {
+                                'Nombre del Responsable': 'Michael Smith',
+                                'Origen del Café': 'Colombia, Región del Huila',
+                                'Perfil de Tueste': ['Claro', 'Medio', 'Oscuro'],
+                                'Empaque y Distribución': {
+                                    'Empaque': 'Bolsas con válvula de aroma y sellado hermético',
+                                    'Canales de distribución': ['Tiendas propias', 'Supermercados', 'En línea']
+                                }
+                            }
+                        },
+                        // Distribuidores
+                        {
+                            id: 9,
+                            type: 'Distribuidores',
+                            name: 'Distribuciones Café del Mundo',
+                            coords: [4.7100, -74.0721],
+                            volume: 15000,
+                            details: {
+                                'Nombre del Responsable': 'Ana Torres',
+                                'Puntos de Entrega': ['Supermercados', 'Cafeterías', 'Hoteles'],
+                                'Frecuencia de Distribución': 'Semanal',
+                                'Costos Logísticos': 'Transporte refrigerado, almacenamiento estratégico'
+                            }
+                        },
+                        // Minoristas
+                        {
+                            id: 10,
+                            type: 'Minoristas',
+                            name: 'Café Aroma y Sabor',
+                            coords: [4.6097, -74.0817],
+                            volume: 3000,
+                            details: {
+                                'Nombre del Responsable': 'Luis Herrera',
+                                'Tipo de Producto Vendido': ['En grano', 'Molido', 'Cápsulas', 'Bebidas preparadas'],
+                                'Precio al Consumidor': {
+                                    'En grano/molido': 'COP 25,000 por 500g',
+                                    'Cápsulas': 'COP 30,000 por caja de 10 unidades'
+                                }
+                            }
+                        },
+                        // Consumidores
+                        {
+                            id: 11,
+                            type: 'Consumidores',
+                            name: 'Natalia Pérez',
+                            coords: [4.6530, -74.1170],
+                            details: {
+                                'Preferencias': {
+                                    'Origen del café': 'Colombia, Huila',
+                                    'Certificaciones': ['Orgánico', 'Comercio Justo'],
+                                    'Perfil de tueste': 'Medio'
+                                },
+                                'Frecuencia de Consumo': 'Diaria',
+                                'Canal de Compra': ['Cafeterías especializadas', 'En línea'],
+                                'Rango de Precios Aceptables': 'COP 20,000 - COP 30,000 por 500g'
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Variables globales
+        let map, heatLayer, markers, polylines = [], chartInitialized = false;
+
+        // Inicializar mapa
+        function initMap() {
+            map = L.map('map', {
+                maxZoom: 18,
+            }).setView([4.570868, -74.297333], 6);
+
+            // Almacenar la capa base en map.tileLayer
+            map.tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 18,
+            }).addTo(map);
+        }
+
+        // Añadir puntos y rutas al mapa
+        function addMarkersAndRoutes(filter = 'all') {
+            if (!markers) markers = L.markerClusterGroup();
+            else markers.clearLayers();
+
+            // Iconos personalizados
+            const icons = {
+                'Productores': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3615/3615403.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Procesadores Primarios': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2917/2917242.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Intermediarios': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081365.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Procesadores Secundarios': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081333.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Exportadores': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910791.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Importadores': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081343.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Tostadores': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3081/3081330.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Distribuidores': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910795.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Minoristas': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2910/2910750.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                'Consumidores': L.icon({
+                    iconUrl: 'https://cdn-icons-png.flaticon.com/512/847/847969.png',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 30],
+                    popupAnchor: [0, -30],
+                }),
+                // Añade más iconos según los tipos de actores
+            };
+
+            // Filtrar y añadir marcadores
+            data.chains[0].actors.forEach((actor) => {
+                if (filter === 'all' || actor.type === filter) {
+                    let detailsHtml = '';
+                    if (actor.details) {
+                        for (const [key, value] of Object.entries(actor.details)) {
+                            if (typeof value === 'object') {
+                                detailsHtml += `<b>${key}:</b><br>`;
+                                for (const [subKey, subValue] of Object.entries(value)) {
+                                    detailsHtml += `&nbsp;&nbsp;<b>${subKey}:</b> ${subValue}<br>`;
+                                }
+                            } else {
+                                detailsHtml += `<b>${key}:</b> ${value}<br>`;
+                            }
+                        }
+                    }
+
+                    const popupContent = `
+                        <strong>${actor.name}</strong><br>
+                        <b>Tipo:</b> ${actor.type}<br>
+                        ${detailsHtml}
+                    `;
+                    const marker = L.marker(actor.coords, { icon: icons[actor.type] }).bindPopup(popupContent);
+                    markers.addLayer(marker);
+                }
+            });
+            map.addLayer(markers);
+
+            // Eliminar polilíneas existentes
+            if (polylines.length > 0) {
+                polylines.forEach(polyline => map.removeLayer(polyline));
+                polylines = [];
+            }
+
+            // Añadir rutas (ejemplo de conexiones entre actores)
+            const routes = [
+                // Productores -> Procesadores Primarios
+                [data.chains[0].actors[0].coords, data.chains[0].actors[2].coords],
+                [data.chains[0].actors[1].coords, data.chains[0].actors[2].coords],
+                // Procesadores Primarios -> Intermediarios
+                [data.chains[0].actors[2].coords, data.chains[0].actors[3].coords],
+                // Intermediarios -> Procesadores Secundarios
+                [data.chains[0].actors[3].coords, data.chains[0].actors[4].coords],
+                // Procesadores Secundarios -> Exportadores
+                [data.chains[0].actors[4].coords, data.chains[0].actors[5].coords],
+                // Exportadores -> Importadores
+                [data.chains[0].actors[5].coords, data.chains[0].actors[6].coords],
+                // Importadores -> Tostadores
+                [data.chains[0].actors[6].coords, data.chains[0].actors[7].coords],
+                // Tostadores -> Distribuidores
+                [data.chains[0].actors[7].coords, data.chains[0].actors[8].coords],
+                // Distribuidores -> Minoristas
+                [data.chains[0].actors[8].coords, data.chains[0].actors[9].coords],
+                // Minoristas -> Consumidores
+                [data.chains[0].actors[9].coords, data.chains[0].actors[10].coords],
+            ];
+            routes.forEach((route) => {
+                let polyline = L.polyline(route, { color: 'blue' }).addTo(map);
+                polylines.push(polyline);
+            });
+        }
+
+        // Crear mapa de calor
+        function createHeatmap() {
+            const heatData = data.chains[0].actors.map((actor) => [
+                actor.coords[0],
+                actor.coords[1],
+                actor.production || actor.capacity || actor.volume || 0,
+            ]);
+            if (heatLayer) map.removeLayer(heatLayer);
+            heatLayer = L.heatLayer(heatData, { radius: 25, blur: 15, maxZoom: 10 }).addTo(map);
+        }
+
+        // Mostrar gráficos de estadísticas
+        function showCharts() {
+            if (chartInitialized) return;
+
+            const ctx = document.getElementById('charts-container').getContext('2d');
+            const labels = data.chains[0].actors.map((actor) => actor.name);
+            const productions = data.chains[0].actors.map((actor) => actor.production || actor.capacity || actor.volume || 0);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Producción/Capacidad/Volumen (kg)',
+                            data: productions,
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+
+            chartInitialized = true;
+        }
+
+function updateLiveDateTime() {
+    const now = new Date();
+    const options = {
+        year: 'numeric', month: 'long', day: 'numeric',
+        hour: 'numeric', minute: 'numeric', second: 'numeric',
+        hour12: false
+    };
+    const formatter = new Intl.DateTimeFormat('es-ES', options);
+    const formattedDate = formatter.format(now);
+    document.getElementById('live-date-time').textContent = 'Fecha y Hora: ' + formattedDate;
+}
+
+
+updateLiveDateTime();
+
+
+setInterval(updateLiveDateTime, 1000);
+
+
+        function switchView(view) {
+            document.getElementById('map').style.display = view === 'charts' ? 'none' : 'block';
+            document.getElementById('charts-container').style.display = view === 'charts' ? 'block' : 'none';
+
+            // Eliminar capas excepto la capa base
+            map.eachLayer((layer) => {
+                if (layer !== map.tileLayer) map.removeLayer(layer);
+            });
+
+            if (view === 'markers') {
+                addMarkersAndRoutes();
+            } else if (view === 'heatmap') {
+                createHeatmap();
+            } else if (view === 'charts') {
+                showCharts();
+            }
+        }
+
+
+        document.getElementById('btn-show-markers').addEventListener('click', () => switchView('markers'));
+        document.getElementById('btn-show-heatmap').addEventListener('click', () => switchView('heatmap'));
+        document.getElementById('btn-show-charts').addEventListener('click', () => switchView('charts'));
+
+
+        document.querySelectorAll('.filter-btn').forEach((btn) => {
+            btn.addEventListener('click', (e) => {
+                const filter = btn.getAttribute('data-filter');
+                switchView('markers');
+                addMarkersAndRoutes(filter);
+            });
+        });
+
+        function goHome() {
+                window.location.href = "index.html";
+            }
+
+        initMap();
+        switchView('markers');
+    </script>
+</body>
+</html>
